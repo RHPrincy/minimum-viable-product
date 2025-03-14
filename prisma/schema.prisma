@@ -1,0 +1,60 @@
+// schema.prisma
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  username        String            @unique
+  password        String
+  fonction        String
+  competences     String?
+  AffectationTache AffectationTache[]
+}
+
+model ObligationFiscale {
+  id          Int     @id @default(autoincrement())
+  nom         String
+  description String
+  etapes      Etape[]
+}
+
+model Etape {
+  id            Int     @id @default(autoincrement())
+  id_obligation Int
+  nom           String
+  description   String
+  date_limite   DateTime? // Optionnel, à rendre obligatoire si nécessaire
+  obligation    ObligationFiscale @relation(fields: [id_obligation], references: [id], onDelete: Cascade)
+  taches        Tache[]
+}
+
+model Tache {
+  id            Int               @id @default(autoincrement())
+  id_etape      Int
+  description   String
+  etape         Etape             @relation(fields: [id_etape], references: [id], onDelete: Cascade)
+  affectations  AffectationTache[]
+}
+
+model AffectationTache {
+  id              Int         @id @default(autoincrement())
+  id_tache        Int
+  id_utilisateur  Int
+  id_dossier      String      // Assurez-vous que le type correspond à votre application
+  statut          EnumStatut  @default(todo)
+  date_affectation DateTime    @default(now())
+  tache           Tache       @relation(fields: [id_tache], references: [id], onDelete: Cascade)
+  utilisateur     User        @relation(fields: [id_utilisateur], references: [id], onDelete: Cascade)
+}
+
+enum EnumStatut {
+  todo
+  in_progress
+  done
+}
