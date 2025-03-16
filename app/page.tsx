@@ -1,10 +1,7 @@
 // /app/page.tsx
 import Link from "next/link";
 import { Card, CardContent } from "@/app/components/Card";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
-// Icônes SVG pour les cartes (optionnel : utilise une bibliothèque comme react-icons si tu préfères)
 const TaskIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-blue-600">
     <path
@@ -39,20 +36,6 @@ const AnalyticsIcon = () => (
 );
 
 export default async function Home() {
-  // // Vérification de la session pour redirection
-  // const sessionCookies = await cookies();
-  // const sessionCookie = sessionCookies.get("session");
-  // if (sessionCookie) {
-  //   try {
-  //     const cookieValue = JSON.parse(sessionCookie.value);
-  //     const userFunction = cookieValue.fonction;
-  //     redirect(`/dashboard/${userFunction}`);
-  //   } catch (error) {
-  //     console.warn("Invalid session cookie:", error);
-  //     // Laisse le middleware gérer ou continue
-  //   }
-  // }
-
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100">
       {/* Fond animé */}

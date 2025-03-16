@@ -2,106 +2,55 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getAllDossier } from "@/lib/dossier";
-import { verifySession, logoutAction } from "./server";
+import { verifySession } from "@/actions/verifyManagerSession"
+import { logoutAction } from "@/actions/logout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/Card";
 import { NavBar } from "@/app/components/NavBar";
 import { Sidebar } from "@/app/components/Sidebar";
 import { Badge } from "@/app/components/Badge";
+import { Dossier, User } from "@/app/interfaces";
 import Link from "next/link";
 
-// Interfaces
-interface User {
-    id: number;
-    username: string;
-    fonction: string;
-    competences?: string | null;
-    taches_traitees?: number | null;
-}
-
-interface Dossier {
-    id: string;
-    Titre: string;
-    Nom: string;
-    Genre: string;
-    Activite: string;
-    SIRET: string;
-    Adresse: string;
-    Email: string;
-    "Forme juridique": string;
-    "Regime fiscal": string;
-    "Regime imposition": string;
-    Type: string;
-    manager: number;
-}
 
 const ManagerDashboard = () => {
-    console.log("Initialisation du composant ManagerDashboard");
-
     const [user, setUser] = useState<User | null>(null);
-    console.log("État user initialisé :", user);
-
     const [sidebarOpen, setSidebarOpen] = useState(true);
-    console.log("État sidebarOpen initialisé :", sidebarOpen);
-
     const [userFiles, setUserFiles] = useState<Dossier[]>([]);
-    console.log("État userFiles initialisé :", userFiles);
-
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    console.log("État errorMessage initialisé :", errorMessage);
-
     const router = useRouter();
-    console.log("Router initialisé");
-
     useEffect(() => {
-
-        console.log("useEffect déclenché");
-
         const initializeUser = async () => {
-            console.log("Début de l'initialisation de l'utilisateur");
-            
             try {
-                const sessionUser = await verifySession(); // Récupérer l'utilisateur depuis le serveur
-                console.log("Utilisateur de session récupéré :", sessionUser);
+                // Récupérer l'utilisateur depuis le serveur
+                const sessionUser = await verifySession(); 
                 setUser(sessionUser);
 
                 const result = await getAllDossier();
-                console.log("Résultat de getAllDossier :", result);
                 const dossiers = Array.isArray(result) ? result : [];
-                console.log("Dossiers filtrés :", dossiers);
 
                 const filteredFiles = dossiers.filter((file) => file.manager === sessionUser.id);
-                console.log("Dossiers filtrés par manager :", filteredFiles);
                 setUserFiles(filteredFiles);
+
             } catch (error) {
                 console.error("Échec de l'initialisation du tableau de bord :", error);
                 setErrorMessage(
                     error instanceof Error ? error.message : "Une erreur est survenue"
                 );
-                console.log("Redirection vers /login en raison d'une erreur");
-                router.push("/login"); // Rediriger en cas d'erreur inattendue
+                // Rediriger en cas d'erreur inattendue
+                router.push("/login"); 
             }
         };
-
         initializeUser();
     }, [router]);
 
     const toggleSidebar = () => {
-        console.log("Basculement de l'état sidebarOpen");
         setSidebarOpen((prev) => !prev);
     };
 
     const handleLogout = async () => {
-        console.log("Début de la déconnexion");
-        try {
-            await logoutAction(); // Appeler l'action serveur pour déconnexion
-            console.log("Déconnexion réussie");
-            setUser(null);
-            console.log("Redirection vers /login après déconnexion");
-            router.push("/login"); // Redirection côté client après déconnexion
-        } catch (error) {
-            console.error("Échec de la déconnexion :", error);
-            setErrorMessage("Erreur lors de la déconnexion");
-        }
+        await logoutAction(); 
+        setUser(null);
+        router.push("/");
     };
 
     if (!user) {
@@ -109,18 +58,14 @@ const ManagerDashboard = () => {
         return null;
     }
 
-    console.log("Rendu du composant ManagerDashboard");
-
     return (
         <div className="flex min-h-screen bg-gray-50">
             <NavBar toggleSidebar={toggleSidebar} user={user} logout={handleLogout} />
             <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} user={user} />
 
-            <main
-                className={`flex-1 px-4 pt-20 transition-all duration-300 lg:px-8 ${sidebarOpen ? "md:ml-64" : "md:ml-16"
-                    }`}
-            >
+            <main className={`flex-1 px-4 pt-20 transition-all duration-300 lg:px-8 ${sidebarOpen ? "md:ml-64" : "md:ml-16"}`}>
                 <div className="mx-auto max-w-5xl pt-6">
+
                     {/* Section Bienvenue */}
                     <div className="mb-8 animate-fade-in">
                         <h1 className="text-3xl font-extrabold text-gray-900">
@@ -172,16 +117,15 @@ const ManagerDashboard = () => {
                         <div className="mb-4 flex items-center justify-between">
                             <h2 className="text-xl font-semibold text-gray-900">Vos dossiers</h2>
                         </div>
+                        <p className="text-sm text-gray-600 mb-4">
+                            Cliquez sur un dossier pour voir plus de détails
+                        </p>
 
                         {errorMessage && (
                             <div className="mb-4 rounded-md bg-red-50 px-4 py-2 text-sm text-red-700">
                                 {errorMessage}
                             </div>
                         )}
-
-                        <p className="text-sm text-gray-600 mb-4">
-                            Cliquez sur un dossier pour voir plus de détails
-                        </p>
 
                         {userFiles.length === 0 ? (
                             <p className="text-gray-500 text-center py-4">Aucun dossier attribué.</p>
@@ -201,7 +145,7 @@ const ManagerDashboard = () => {
                                                         {file.Titre}
                                                     </CardTitle>
                                                     <Badge className="bg-indigo-100 text-indigo-800">
-                                                        {file["Forme juridique"]}
+                                                        {file["Type"]}
                                                     </Badge>
                                                 </div>
                                             </CardHeader>
@@ -223,7 +167,7 @@ const ManagerDashboard = () => {
                                                     </div>
                                                     <div>
                                                         <p className="text-gray-600">Catégorie</p>
-                                                        <p className="font-medium text-gray-900">{file.Type}</p>
+                                                        <p className="font-medium text-gray-900">{file["Forme juridique"]}</p>
                                                     </div>
                                                 </div>
                                             </CardContent>

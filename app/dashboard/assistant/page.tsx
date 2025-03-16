@@ -9,7 +9,7 @@ import {
 } from "./server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/Card";
 import { NavBar } from "@/app/components/NavBar";
-import { Sidebar } from "@/app/components/Sidebar";
+// import { Sidebar } from "@/app/components/Sidebar";
 import { Badge } from "@/app/components/Badge";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -73,7 +73,7 @@ const AssistantDashboard = () => {
   const handleLogout = async () => {
     try {
       await logoutAction();
-      router.push("/login");
+      router.push("/");
     } catch (error) {
       setErrorMessage("Erreur lors de la déconnexion");
     }
@@ -119,11 +119,11 @@ const AssistantDashboard = () => {
         user={user}
         logout={handleLogout}
       />
-      <Sidebar
+      {/* <Sidebar
         isOpen={sidebarOpen}
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         user={user}
-      />
+      /> */}
 
       <main
         className={`flex-1 px-6 pt-16 transition-all duration-300 ${

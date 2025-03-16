@@ -49,9 +49,6 @@ const NavBar = ({
                     )}
 
                     <Link href="/" className="flex items-center gap-2">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-indigo-600 text-white font-bold">
-                            P
-                        </span>
                         <span className="hidden text-lg font-semibold text-gray-900 md:inline-block">
                             Project
                         </span>

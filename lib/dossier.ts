@@ -1,19 +1,5 @@
 // /lib/dossier.ts
-interface Dossier {
-    id: string;
-    Titre: string;
-    Nom: string;
-    Genre: string;
-    Activite: string;
-    SIRET: string;
-    Adresse: string;
-    Email: string;
-    "Forme juridique": string;
-    "Regime fiscal": string;
-    "Regime imposition": string;
-    Type: string;
-    manager: number;
-}
+import { Dossier } from '@/app/interfaces';
 
 export async function getAllDossier(): Promise<Dossier[]> {
     try {
@@ -47,34 +33,34 @@ export async function getAllDossier(): Promise<Dossier[]> {
     }
 }
 
-export async function getDossierById(id: string): Promise<Dossier | null> {
-    try {
-        const response = await fetch(`http://localhost:3000/api/dossier/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            cache: 'no-store'
-        });
+// export async function getDossierById(id: string): Promise<Dossier | null> {
+//     try {
+//         const response = await fetch(`http://localhost:3000/api/dossier/${id}`, {
+//             method: 'GET',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             cache: 'no-store'
+//         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! status: ${response.status}`);
+//         }
 
-        const data = await response.json();
-        console.log('Raw API response:', data);
+//         const data = await response.json();
+//         console.log('Raw API response:', data);
 
-        if (typeof data !== 'object') {
-            console.error('API did not return an object:', data);
-            return null;
-        }
+//         if (typeof data !== 'object') {
+//             console.error('API did not return an object:', data);
+//             return null;
+//         }
 
-        return data;
-    } catch (error) {
-        console.error('Fetch error details:', {
-            message: (error as Error).message,
-            stack: (error as Error).stack
-        });
-        throw error;
-    }
-}
+//         return data;
+//     } catch (error) {
+//         console.error('Fetch error details:', {
+//             message: (error as Error).message,
+//             stack: (error as Error).stack
+//         });
+//         throw error;
+//     }
+// }

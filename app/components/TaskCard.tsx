@@ -2,7 +2,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from './Card';
-import { ProgressBar } from './ProgressBar';
 import { Badge } from './Badge';
 import { Avatar } from './Avatar';
 
@@ -62,12 +61,6 @@ const TaskCard = ({
                         {description}
                     </p>
                 )}
-                <ProgressBar
-                    value={progress}
-                    max={100}
-                    size="sm"
-                    variant={progress === 100 ? 'success' : 'default'}
-                />
                 <div className="mt-4 flex items-center justify-between">
                     <div className="text-xs text-muted-foreground">
                         Due {formattedDeadline}

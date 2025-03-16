@@ -11,7 +11,7 @@ import {
 } from "./server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/Card";
 import { NavBar } from "@/app/components/NavBar";
-import { Sidebar } from "@/app/components/Sidebar";
+// import { Sidebar } from "@/app/components/Sidebar";
 import { Badge } from "@/app/components/Badge";
 import toast, { Toaster } from "react-hot-toast";
 import { User, Task, Step, DossierGroup, Assistant } from "@/app/interfaces";
@@ -86,7 +86,7 @@ const CollaboratorDashboard = () => {
     const handleLogout = async () => {
         try {
             await logoutAction();
-            router.push("/login");
+            router.push("/");
         } catch (error) {
             setErrorMessage("Erreur lors de la déconnexion");
         }
@@ -176,11 +176,11 @@ const CollaboratorDashboard = () => {
                 user={user}
                 logout={handleLogout}
             />
-            <Sidebar
+            {/* <Sidebar
                 isOpen={sidebarOpen}
                 toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
                 user={user}
-            />
+            /> */}
 
             <main
                 className={`flex-1 px-6 pt-16 transition-all duration-300 ${
@@ -292,7 +292,7 @@ const CollaboratorDashboard = () => {
                                                                             e.target.value as "todo" | "in_progress" | "done"
                                                                         )
                                                                     }
-                                                                    className="appearance-none bg-white border border-gray-200 rounded-full pl-3 pr-8 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-150 cursor-pointer custom-select"
+                                                                    className="bg-white border border-gray-200 rounded-full pl-3 pr-8 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-150 cursor-pointer custom-select"
                                                                 >
                                                                     <option value="todo">À faire</option>
                                                                     <option value="in_progress">En cours</option>

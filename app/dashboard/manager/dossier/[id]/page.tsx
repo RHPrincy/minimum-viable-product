@@ -1,64 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import {
-    verifySession,
-    logoutAction,
-    getCollaborators,
-    getDossierDetails,
-    assignTaskToUser,
-    updateTaskStatus,
-} from "./server";
+// import { getCollaborators, getDossierDetails, assignTaskToUser, updateTaskStatus } from "./server";
+import { getCollaborators, getDossierDetails, assignTaskToUser } from "./server";
+import { verifySession } from "@/actions/verifyManagerSession";
+import { logoutAction } from "@/actions/logout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/Card";
 import { NavBar } from "@/app/components/NavBar";
 import { Sidebar } from "@/app/components/Sidebar";
 import { Badge } from "@/app/components/Badge";
 import toast, { Toaster } from "react-hot-toast";
 import { User, Dossier, Task, Step, Collaborator } from "@/app/interfaces";
-
-// // Interfaces
-// interface User {
-//     id: number;
-//     username: string;
-//     fonction: string;
-//     competences?: string | null;
-// }
-
-// interface Dossier {
-//     id: string;
-//     Titre: string;
-//     Nom: string;
-//     Genre: string;
-//     Activite: string;
-//     SIRET: string;
-//     Adresse: string;
-//     Email: string;
-//     "Forme juridique": string;
-//     "Regime fiscal": string;
-//     "Regime imposition": string;
-//     Type: string;
-//     manager: number;
-// }
-
-// interface Task {
-//     id: number;
-//     description: string;
-//     status?: "todo" | "in_progress" | "done";
-//     assignedTo?: number | null;
-// }
-
-// interface Step {
-//     id: number;
-//     nom: string;
-//     description: string;
-//     tasks: Task[];
-// }
-
-// interface Collaborator {
-//     id: number;
-//     username: string;
-//     fonction: "collaborateur" | "assistant";
-// }
 
 const DossierDetailPage = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -68,6 +20,7 @@ const DossierDetailPage = () => {
     const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+    // Get dossier by id if not params
     const params = useParams();
     const router = useRouter();
 
@@ -84,6 +37,7 @@ const DossierDetailPage = () => {
                 } else {
                     setDossier(dossier);
                     setSteps(steps);
+                    console.log("params.id", params.id);
                 }
 
                 const fetchedCollaborators = await getCollaborators();
@@ -100,11 +54,7 @@ const DossierDetailPage = () => {
 
     // Gestion de la déconnexion
     const handleLogout = async () => {
-        try {
-            await logoutAction();
-        } catch (error) {
-            setErrorMessage("Erreur lors de la déconnexion");
-        }
+        await logoutAction();
     };
 
     // Ouvrir la popup d'affectation
@@ -143,49 +93,37 @@ const DossierDetailPage = () => {
     };
 
     // Mise à jour du statut d'une tâche
-    const changeTaskStatus = async (
-        taskId: number,
-        newStatus: "todo" | "in_progress" | "done"
-    ) => {
-        if (!dossier) return;
+    // const changeTaskStatus = async (
+    //     taskId: number,
+    //     newStatus: "todo" | "in_progress" | "done"
+    // ) => {
+    //     if (!dossier) return;
 
-        try {
-            await updateTaskStatus(taskId, dossier.id, newStatus);
-            setSteps((prevSteps) =>
-                prevSteps.map((step) => ({
-                    ...step,
-                    tasks: step.tasks.map((task) =>
-                        task.id === taskId ? { ...task, status: newStatus } : task
-                    ),
-                }))
-            );
-            toast.success(`Statut mis à jour : ${newStatus}`);
-        } catch (error) {
-            toast.error("Erreur lors de la mise à jour du statut");
-        }
-    };
+    //     try {
+    //         await updateTaskStatus(taskId, dossier.id, newStatus);
+    //         setSteps((prevSteps) =>
+    //             prevSteps.map((step) => ({
+    //                 ...step,
+    //                 tasks: step.tasks.map((task) =>
+    //                     task.id === taskId ? { ...task, status: newStatus } : task
+    //                 ),
+    //             }))
+    //         );
+    //         toast.success(`Statut mis à jour : ${newStatus}`);
+    //     } catch (error) {
+    //         toast.error("Erreur lors de la mise à jour du statut");
+    //     }
+    // };
 
     if (!user) return null;
 
     return (
         <div className="flex min-h-screen bg-gray-100 font-sans">
             <Toaster />
-            <NavBar
-                toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-                user={user}
-                logout={handleLogout}
-            />
-            <Sidebar
-                isOpen={sidebarOpen}
-                toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-                user={user}
-            />
+            <NavBar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} user={user} logout={handleLogout}/>
+            <Sidebar isOpen={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} user={user}/>
 
-            <main
-                className={`flex-1 px-6 pt-16 transition-all duration-300 ${
-                    sidebarOpen ? "md:ml-64" : "md:ml-16"
-                }`}
-            >
+            <main className={`flex-1 px-6 pt-16 transition-all duration-300 ${ sidebarOpen ? "md:ml-64" : "md:ml-16"}`}>
                 <div className="mx-auto max-w-6xl pt-6">
                     {errorMessage && (
                         <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg shadow-sm">

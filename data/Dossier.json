@@ -103,5 +103,20 @@
         "Regime imposition": "IR",
         "Type": "BIC",
         "manager": 2
+    },
+    {
+        "id": "D8",
+        "Titre": "Vaovao",
+        "Nom": "Vaovao",
+        "Genre": "Vaovao",
+        "Activite": "Vaovao",
+        "SIRET": "1000000007",
+        "Adresse": "Vaovao",
+        "Email": "vaovao",
+        "Forme juridique": "vaovao",
+        "Regime fiscal": "vaovao",
+        "Regime imposition": "vaovao",
+        "Type": "vaovao",
+        "manager": 1
     }
 ]

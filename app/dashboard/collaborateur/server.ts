@@ -1,7 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import { PrismaClient } from "@prisma/client";
-import { getSessionUser, destroySession } from "@/lib/auth";
+import { getSessionUser, destroySession } from "@/lib/session";
 import dossiersData from "@/data/Dossier.json";
 
 // Initialiser Prisma Client

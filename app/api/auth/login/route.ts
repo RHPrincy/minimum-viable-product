@@ -2,7 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Importation des fonctions d'authentification et de création de session depuis un fichier auth personnalisé
-import { authenticate, createSession } from "@/lib/auth";
+import { authenticate } from "@/lib/auth";
+import { createSession } from "@/lib/session";
 
 // Définition d'une fonction POST asynchrone qui gère les requêtes POST
 export async function POST(req: NextRequest) {
